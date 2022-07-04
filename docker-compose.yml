@@ -1,0 +1,45 @@
+version: '3.7'
+
+services:
+  mariadb:
+    image: bitnami/mariadb:10.2.29
+    env_file: 
+      - ./.env
+    environment:
+      - BITNAMI_DEBUG=${BITNAMI_DEBUG}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+    networks:
+     - database
+
+  moodle:
+    image: bitnami/moodle:latest
+    env_file: 
+      - ./.env
+    environment:
+      - BITNAMI_DEBUG=${BITNAMI_DEBUG}
+      - MARIADB_HOST=${MARIADB_HOST}
+      - MARIADB_PORT_NUMBER=${MARIADB_PORT_NUMBER}
+      - MOODLE_DATABASE_USER=${MOODLE_DATABASE_USER}
+      - MOODLE_DATABASE_PASSWORD=${MOODLE_DATABASE_PASSWORD}
+      - MOODLE_DATABASE_NAME=${MOODLE_DATABASE_NAME}
+      - MOODLE_USERNAME=${MOODLE_USERNAME}
+      - MOODLE_PASSWORD=${MOODLE_PASSWORD}
+      - MOODLE_SITE_NAME=${MOODLE_SITE_NAME}
+
+    volumes:
+      - ./moodle:/bitnami/moodle
+      - ./moodledata:/bitnami/moodledata
+    ports:
+     - "8000:8080"
+    depends_on:
+     - mariadb
+    networks:
+     - database
+ 
+networks:
+  database:
+    driver: bridge
+
