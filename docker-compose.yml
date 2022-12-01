@@ -13,6 +13,8 @@ services:
       - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
     networks:
      - database
+    volumes:
+     - ./db:/bitnami/mariadb
 
   moodle:
     image: bitnami/moodle:latest
