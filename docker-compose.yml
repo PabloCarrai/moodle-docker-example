@@ -2,11 +2,10 @@ version: '3.7'
 
 services:
   mariadb:
-    image: bitnami/mariadb:latest
+    image: mariadb:latest
     env_file: 
       - ./.env
     environment:
-      - BITNAMI_DEBUG=${BITNAMI_DEBUG}
       - MARIADB_USER=${MARIADB_USER}
       - MARIADB_PASSWORD=${MARIADB_PASSWORD}
       - MARIADB_DATABASE=${MARIADB_DATABASE}
