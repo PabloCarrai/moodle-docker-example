@@ -1,5 +1,14 @@
 #	moodle-docker-example
 git clone https://github.com/PabloCarrai/moodle-docker-example.git	
 cd moodle-docker-example
-#	modify the .env values to your liking
+#	you have to create some folders	
+mkdir mariadb_data moodle_data moodledata_data
+#	and for the mariadb service folder we need a specific user and the same permissions for that folder
+# https://github.com/bitnami/containers/issues/23841#issuecomment-1816394184
+sudo useradd -u 1001 mariadb-bitnami
+sudo chown -R mariadb-bitnami:mariadb-bitnami mariadb_data
+#	It is advisable to start the DB service first and then the docker.
+docker-compose up -d mariadb
+#       modify the .env values to your liking
 docker-compose up -d
+
