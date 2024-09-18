@@ -1,46 +1,44 @@
-version: '3.7'
-
 services:
   mariadb:
-    image: mariadb:latest
-    env_file: 
+    image: docker.io/bitnami/mariadb:latest
+    env_file:
       - ./.env
+    restart: always
     environment:
+      - ALLOW_EMPTY_PASSWORD=${ALLOW_EMPTY_PASSWORD}
       - MARIADB_USER=${MARIADB_USER}
-      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
       - MARIADB_DATABASE=${MARIADB_DATABASE}
-      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
-    networks:
-     - database
+      - MARIADB_CHARACTER_SET=${MARIADB_CHARACTER_SET}
+      - MARIADB_COLLATE=${MARIADB_COLLATE}
     volumes:
-     - ./db:/bitnami/mariadb
-
+      - type: bind
+        source: /home/ed/md/mariadb_data
+        target: /bitnami/mariadb      
+      
   moodle:
-    image: bitnami/moodle:latest
-    env_file: 
+    image: docker.io/bitnami/moodle:latest
+    ports:
+      - '80:8080'
+      - '443:8443'
+    env_file:
       - ./.env
+    restart: always
     environment:
-      - BITNAMI_DEBUG=${BITNAMI_DEBUG}
-      - MARIADB_HOST=${MARIADB_HOST}
-      - MARIADB_PORT_NUMBER=${MARIADB_PORT_NUMBER}
+      - MOODLE_DATABASE_HOST=${MOODLE_DATABASE_HOST}
+      - MOODLE_DATABASE_PORT_NUMBER=${MOODLE_DATABASE_PORT_NUMBER}
       - MOODLE_DATABASE_USER=${MOODLE_DATABASE_USER}
-      - MOODLE_DATABASE_PASSWORD=${MOODLE_DATABASE_PASSWORD}
       - MOODLE_DATABASE_NAME=${MOODLE_DATABASE_NAME}
+      - ALLOW_EMPTY_PASSWORD=${ALLOW_EMPTY_PASSWORD}
       - MOODLE_USERNAME=${MOODLE_USERNAME}
       - MOODLE_PASSWORD=${MOODLE_PASSWORD}
-      - MOODLE_SITE_NAME=${MOODLE_SITE_NAME}
-
+      - MOODLE_EMAIL=${MOODLE_EMAIL}
     volumes:
-      - ./moodle:/bitnami/moodle
-      - ./moodledata:/bitnami/moodledata
-    ports:
-     - "8000:8080"
+      - type: bind
+        source: /home/ed/md/moodle_data
+        target: /bitnami/moodle
+      - type: bind
+        source: /home/ed/md/moodledata_data
+        target: /bitnami/moodledata
     depends_on:
-     - mariadb
-    networks:
-     - database
- 
-networks:
-  database:
-    driver: bridge
+      - mariadb
 
